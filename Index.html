@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080a14">
+  <meta name="description" content="Uma missão confidencial. Um destino especial.">
+  <title>Operação: Conquistar Você</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="scanlines"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Início da missão">
+      <span class="brand-icon">◈</span>
+      <span>O.C.V. <small>DIVISÃO DE OPERAÇÕES ESPECIAIS</small></span>
+    </a>
+
+    <div class="top-actions">
+      <span id="connectionStatus" class="connection">
+        <span class="status-dot"></span> SISTEMA ONLINE
+      </span>
+      <button id="musicButton" class="icon-button" type="button"
+        aria-pressed="false" title="Ativar ou desativar a trilha sonora">
+        ♫ <span id="musicLabel">ATIVAR TRILHA</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro-panel">
+      <div class="eyebrow"><span class="pulse"></span> ARQUIVO CLASSIFICADO // NÍVEL 05</div>
+      <h1>OPERAÇÃO:<br><span>CONQUISTAR VOCÊ</span></h1>
+      <p class="intro-copy">
+        Uma missão confidencial foi iniciada. Resolva os desafios,
+        recupere os arquivos e descubra a mensagem que aguarda no final.
+      </p>
+      <div class="classified-stamp">ACESSO RESTRITO</div>
+    </section>
+
+    <section class="progress-panel" aria-label="Progresso da missão">
+      <div class="progress-heading">
+        <span>PROGRESSO DA OPERAÇÃO</span>
+        <strong id="progressText">0 / 5 FASES</strong>
+      </div>
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <div class="phase-track" id="phaseTrack">
+        <span class="phase-marker active">01</span>
+        <span class="phase-marker locked">02</span>
+        <span class="phase-marker locked">03</span>
+        <span class="phase-marker locked">04</span>
+        <span class="phase-marker locked">05</span>
+      </div>
+    </section>
+
+    <section class="game-layout">
+      <aside class="side-panel">
+        <div class="panel-heading"><span class="tiny-icon">▤</span> PAINEL DA AGÊNCIA</div>
+
+        <div class="agent-card">
+          <div class="agent-symbol">◈</div>
+          <div>
+            <span class="muted-label">AGENTE DESIGNADO</span>
+            <strong>AGENTE ESPECIAL</strong>
+            <span class="agent-rank">NÍVEL DE ACESSO: CONFIDENCIAL</span>
+          </div>
+        </div>
+
+        <div class="side-divider"></div>
+
+        <div class="side-stat">
+          <span>FASES CONCLUÍDAS</span>
+          <strong id="sideCompleted">00 <small>/ 05</small></strong>
+        </div>
+        <div class="side-stat">
+          <span>STATUS DA MISSÃO</span>
+          <strong id="missionStatus" class="status-waiting">AGUARDANDO</strong>
+        </div>
+
+        <div class="side-divider"></div>
+
+        <div class="briefing">
+          <span class="muted-label">DIRETRIZ</span>
+          <p>Observe os detalhes. Pense com calma. Use as pistas quando precisar.</p>
+        </div>
+
+        <button id="restartButton" class="text-button" type="button">
+          ↻ REINICIAR MISSÃO
+        </button>
+      </aside>
+
+      <section class="mission-panel" aria-live="polite">
+        <div class="mission-topline">
+          <span id="phaseLabel" class="phase-label">FASE 01 // AUTENTICAÇÃO</span>
+          <span id="difficultyLabel" class="difficulty">DIFICULDADE: MÉDIA</span>
+        </div>
+
+        <div id="gameContent">
+          <!-- O conteúdo das fases é criado pelo JavaScript. -->
+        </div>
+
+        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <span>O.C.V. // SISTEMA DE MISSÕES</span>
+      <span>ACESSO PESSOAL • <span id="year"></span></span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+      </html>
+  
