@@ -340,7 +340,7 @@ function renderPhaseOne() {
     event.preventDefault();
     const answer = $("#phaseOneAnswer").value.trim();
 
-    if (answer === "38") {
+    if (answer !== "" && Number(answer) === 38) {
       completePhase(1, "PADRÃO IDENTIFICADO. O ARQUIVO 01 FOI DESBLOQUEADO.");
       $("#phaseOneAnswer").disabled = true;
       $("#phaseOneForm button").disabled = true;
@@ -828,4 +828,158 @@ function renderFinal() {
 
   player.load();
           }
+
+/* ===== CORREÇÕES: TRILHA E INICIALIZAÇÃO ===== */
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function escapeAttribute(value) {
+  return escapeHTML(value);
+}
+
+function stopMusic() {
+  if (musicTimer !== null) {
+    clearInterval(musicTimer);
+    musicTimer = null;
+  }
+
+  musicEnabled = false;
+
+  if (musicButton) {
+    musicButton.setAttribute("aria-pressed", "false");
+  }
+
+  if (musicLabel) {
+    musicLabel.textContent = "ATIVAR TRILHA";
+  }
+}
+
+function startMusic(romantic = false) {
+  try {
+    const AudioEngine =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioEngine) {
+      showToast("Seu navegador não suporta a trilha sonora.");
+      return;
+    }
+
+    if (musicTimer !== null) {
+      clearInterval(musicTimer);
+      musicTimer = null;
+    }
+
+    if (!audioContext) {
+      audioContext = new AudioEngine();
+    }
+
+    audioContext.resume().then(() => {
+      musicEnabled = true;
+      romanticMode = romantic || romanticMode;
+
+      if (musicButton) {
+        musicButton.setAttribute("aria-pressed", "true");
+      }
+
+      if (musicLabel) {
+        musicLabel.textContent = "DESATIVAR TRILHA";
+      }
+
+      const suspense = [
+        220, 261.63, 196, 293.66,
+        220, 329.63, 261.63, 196
+      ];
+
+      const love = [
+        261.63, 329.63, 392, 329.63,
+        293.66, 349.23, 440, 392
+      ];
+
+      musicStep = 0;
+
+      function playNote() {
+        if (!audioContext || !musicEnabled) return;
+
+        const notes = romanticMode ? love : suspense;
+        const frequency = notes[musicStep % notes.length];
+        musicStep++;
+
+        const oscillator = audioContext.createOscillator();
+        const volume = audioContext.createGain();
+        const now = audioContext.currentTime;
+
+        oscillator.type = romanticMode ? "sine" : "triangle";
+        oscillator.frequency.setValueAtTime(frequency, now);
+
+        volume.gain.setValueAtTime(0.0001, now);
+        volume.gain.exponentialRampToValueAtTime(0.07, now + 0.06);
+        volume.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+
+        oscillator.connect(volume);
+        volume.connect(audioContext.destination);
+
+        oscillator.start(now);
+        oscillator.stop(now + 0.34);
+      }
+
+      playNote();
+      musicTimer = setInterval(playNote, 380);
+    }).catch(() => {
+      showToast("Toque em ATIVAR TRILHA para liberar o áudio.");
+    });
+  } catch (error) {
+    showToast("Não foi possível iniciar a trilha neste navegador.");
+  }
+}
+
+function resetMission() {
+  stopMusic();
+
+  completedPhases = new Set();
+  hintShown = new Set();
+  currentPhase = 0;
+  sequenceInput = [];
+  sequenceBusy = false;
+  romanticMode = false;
+
+  document.body.classList.remove("romantic-mode");
+
+  updateProgress();
+  renderAccess();
+}
+
+if (musicButton) {
+  musicButton.addEventListener("click", () => {
+    if (musicEnabled) {
+      stopMusic();
+    } else {
+      startMusic(false);
+    }
+  });
+}
+
+document.addEventListener("click", (event) => {
+  const hint = event.target.closest('[data-action="hint"]');
+
+  if (hint) {
+    toggleHint(Number(hint.dataset.phase));
+  }
+});
+
+const restartButton = document.querySelector("#restartButton");
+
+if (restartButton) {
+  restartButton.addEventListener("click", resetMission);
+}
+
+renderAccess();
+              
 
