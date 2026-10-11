@@ -636,5 +636,196 @@ function renderPhaseFour() {
 
 /* FASE 5 — enigma final */
 
+
 function renderPhaseFive() {
-  p
+  phaseLabel.textContent = "FASE 05 // ÚLTIMA AUTORIZAÇÃO";
+
+  gameContent.innerHTML = `
+    <div class="terminal-line">
+      &gt; CINCO ARQUIVOS ANALISADOS<br>
+      &gt; ÚLTIMO DESAFIO DETECTADO<br>
+      &gt; UMA ÚLTIMA PALAVRA É NECESSÁRIA
+    </div>
+
+    <h2 class="mission-title">O segredo da missão</h2>
+
+    <p class="mission-description">
+      Você chegou ao último arquivo. Leia o enigma com atenção
+      e encontre a palavra que libera a transmissão final.
+    </p>
+
+    <div class="document">
+      <div class="document-head">
+        <span>ARQUIVO FINAL 05-Z</span>
+        <span>ACESSO MÁXIMO</span>
+      </div>
+
+      <p style="color:var(--text);font-size:15px;line-height:2">
+        Não sou um objeto que se embrulha.<br>
+        Não sou uma senha que se esquece.<br>
+        Posso ser demonstrado em gestos,<br>
+        fortalecido com cuidado<br>
+        e compartilhado sem perder meu valor.<br><br>
+        <strong>O que sou?</strong>
+      </p>
+    </div>
+
+    <form id="phaseFiveForm">
+      <label class="input-label" for="phaseFiveAnswer">
+        PALAVRA DE AUTORIZAÇÃO
+      </label>
+
+      <input
+        class="game-input"
+        id="phaseFiveAnswer"
+        type="text"
+        maxlength="30"
+        autocomplete="off"
+        placeholder="Sua resposta..."
+        required
+      >
+
+      <div class="button-row">
+        <button class="primary-button" type="submit">
+          LIBERAR TRANSMISSÃO ↗
+        </button>
+      </div>
+    </form>
+
+    ${hintButton(
+      5,
+      "Pense no sentimento que pode ser demonstrado por atitudes e que está no próprio título desta experiência."
+    )}
+
+    ${nextPhaseButton()}
+  `;
+
+  attachNextPhaseButton();
+
+  document
+    .getElementById("phaseFiveForm")
+    .addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const resposta = normalize(
+        document.getElementById("phaseFiveAnswer").value
+      );
+
+      if (resposta === "AMOR") {
+        completePhase(
+          5,
+          "TODAS AS FASES CONCLUÍDAS. TRANSMISSÃO FINAL AUTORIZADA."
+        );
+
+        document.getElementById("phaseFiveAnswer").disabled = true;
+
+        document.querySelector(
+          "#phaseFiveForm button"
+        ).disabled = true;
+      } else {
+        setFeedback(
+          "PALAVRA NÃO RECONHECIDA. Releia o enigma e tente novamente.",
+          "error"
+        );
+      }
+    });
+}
+
+function renderFinal() {
+  updateProgress();
+
+  phaseLabel.textContent =
+    "MISSÃO CONCLUÍDA // TRANSMISSÃO PESSOAL";
+
+  setFeedback(
+    "PROTOCOLO FINAL EXECUTADO. TODAS AS CINCO FASES FORAM CONCLUÍDAS.",
+    "success"
+  );
+
+  gameContent.innerHTML = `
+    <div class="completion-banner">
+      ✓ ACESSO TOTAL CONCEDIDO<br>
+      ✓ TODOS OS ARQUIVOS RECUPERADOS<br>
+      ✓ TRANSMISSÃO PESSOAL DISPONÍVEL
+    </div>
+
+    <div class="final-card">
+      <div class="final-kicker">
+        MENSAGEM CONFIDENCIAL • SOMENTE PARA VOCÊ
+      </div>
+
+      <h3>Missão cumprida. <span class="heart">♥</span></h3>
+
+      <p>${escapeHTML(CONFIG.declaration)}</p>
+
+      <p style="color:#ff9fc5;font-size:15px">
+        Com carinho, de mim para você. ❤️
+      </p>
+    </div>
+
+    <div class="audio-card">
+      <div class="final-kicker">
+        TRANSMISSÃO DE VOZ // 001
+      </div>
+
+      <h4>Uma mensagem minha para você</h4>
+
+      <p>
+        Esta gravação foi preparada especialmente para este momento.
+        Coloque seu arquivo voz.mp3 dentro da pasta audio/.
+      </p>
+
+      <audio id="voicePlayer" controls preload="metadata">
+        <source src="${escapeAttribute(CONFIG.voicePath)}" type="audio/mpeg">
+        Seu navegador não consegue reproduzir este áudio.
+      </audio>
+
+      <div id="audioHelp" class="audio-placeholder">
+        Sua gravação aparecerá aqui quando o arquivo estiver no lugar certo.
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button
+        id="replayButton"
+        class="secondary-button"
+        type="button"
+      >
+        OUVIR A TRILHA NOVAMENTE
+      </button>
+
+      <button
+        id="restartFinalButton"
+        class="primary-button"
+        type="button"
+      >
+        RECOMEÇAR A MISSÃO
+      </button>
+    </div>
+  `;
+
+  const player = document.getElementById("voicePlayer");
+  const audioHelp = document.getElementById("audioHelp");
+
+  player.addEventListener("error", () => {
+    audioHelp.textContent =
+      "Áudio não encontrado. Verifique se o arquivo está em audio/voz.mp3.";
+  });
+
+  player.addEventListener("loadedmetadata", () => {
+    audioHelp.textContent =
+      "Gravação carregada. Pressione play para ouvir.";
+  });
+
+  document.getElementById("replayButton").addEventListener("click", () => {
+    startMusic(true);
+    showToast("A trilha romântica foi reiniciada.");
+  });
+
+  document
+    .getElementById("restartFinalButton")
+    .addEventListener("click", resetMission);
+
+  player.load();
+          }
+
