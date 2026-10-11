@@ -825,10 +825,7 @@ function renderFinal() {
   document
     .getElementById("restartFinalButton")
     .addEventListener("click", resetMission);
-
-  player.load();
-          }
-
+}
 /* ===== CORREÇÕES: TRILHA E INICIALIZAÇÃO ===== */
 
 function escapeHTML(value) {
@@ -981,6 +978,4 @@ if (restartButton) {
 }
 
 renderAccess();
-
-
-     }
+player.load();
