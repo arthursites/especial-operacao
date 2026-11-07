@@ -12,7 +12,7 @@ const CONFIG = {
   password: "15052012",
 
   // Coloque sua gravação em audio/voz.mp3.
-  voicePath: "voz.aac",
+  voicePath: "voz.mp3",
 
   // Personalize esta declaração quando quiser.
   // Não há nomes ou memórias pessoais inventadas neste texto.
